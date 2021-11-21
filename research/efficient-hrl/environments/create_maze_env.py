@@ -12,9 +12,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 # ==============================================================================
+import math
 
 from environments.ant_maze_env import AntMazeEnv
 from environments.point_maze_env import PointMazeEnv
+from rllab.envs.mujoco.gather.ant_gather_env import AntGatherEnv
 
 import tensorflow as tf
 import gin.tf
@@ -24,6 +26,12 @@ from tf_agents.environments import tf_py_environment
 
 @gin.configurable
 def create_maze_env(env_name=None, top_down_view=False):
+  if env_name == 'AntGather':
+    e = AntGatherEnv(n_bins=8, sensor_span=2 * math.pi)
+    e.reset()
+    wrapped_env = gym_wrapper.GymWrapper(e)
+    return wrapped_env
+
   n_bins = 0
   manual_collision = False
   if env_name.startswith('Ego'):

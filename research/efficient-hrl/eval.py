@@ -430,6 +430,7 @@ def evaluate(checkpoint_dir,
       generate_videos, generate_summaries, video_settings)
 
   if checkpoint_path is not None:
+    print("checkpoint path not none!")
     checkpoint_path = os.path.join(checkpoint_dir, checkpoint_path)
     evaluate_checkpoint_fn(checkpoint_path)
   elif checkpoint_range is not None:

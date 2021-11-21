@@ -24,7 +24,10 @@ import tensorflow as tf
 from collections import namedtuple
 logging = tf.logging
 import gin.tf
-
+import cv2
+import yaml
+import time
+import os
 
 @gin.configurable
 def evaluate_checkpoint_repeatedly(checkpoint_dir,
@@ -149,3 +152,76 @@ def compute_reward(sess, step_fn, gamma, num_steps):
     actions.append(action)
   return (total_reward, reward, total_meta_reward, meta_reward,
           states, actions)
+
+
+
+
+# def capture_video(sess, eval_step, env_base, total_steps, video_filename,
+#                   video_settings, reset_every):
+#   video_writer = None
+#   print(f"WRITING VIDEO TO: {video_filename}")
+#   if not isinstance(video_settings, dict):
+#     try:
+#       video_settings = yaml.load(video_settings)
+#     except:
+#       tf.logging.info("Cannot convert video_settings to a dict via yaml!")
+#   if video_settings is not None and "fps" in video_settings:
+#     fps = video_settings["fps"]
+#   else:
+#     fps = 20
+#
+#   video_dir = os.path.dirname(video_filename)
+#   os.makedirs(video_dir, exist_ok=True)
+#
+#   arr = np.array([])
+#   arr_reward = np.array([])
+#   states = np.array([])
+#
+#   def stack(a, b):
+#     if len(a) == 0:
+#       return np.array([b])
+#
+#     else:
+#       return np.vstack((a, b))
+#
+#   for t in range(total_steps):
+#     print(f'---------------------------------------------{eval_step}------------------------------------------------')
+#     (next_state, action, time_step, post_reward, post_meta_reward,
+#      discount, contexts, state_repr, _, _) = eval_step(sess)
+#     states = stack(states, next_state[:2])
+#     if len(arr_reward) == 0:
+#       arr_reward = np.array([post_reward])
+#     else:
+#       arr_reward = np.vstack((arr_reward, np.array(post_reward)))
+#
+#     if len(arr) == 0:
+#       arr = np.array([contexts[0]])
+#     else:
+#       arr = np.vstack((arr, np.array(contexts[0])))
+#     # id = env_base._gym_env.wrapped_env.sim.model.joint_name2id("movable_meta")
+#     qpos = env_base._gym_env.wrapped_env.sim.data.qpos
+#     # import ipdb; ipdb.set_trace()
+#     qpos[-2] = contexts[0][0] + next_state[0]
+#     qpos[-1] = contexts[0][1] + next_state[1]
+#
+#     env_base.gym.render(mode='human')
+#     img = env_base.gym.render(mode='rgb_array')
+#     if video_writer is None:
+#       height, width = img.shape[:2]
+#       video_writer = cv2.VideoWriter(
+#         video_filename, apiPreference=cv2.CAP_ANY,
+#         fourcc=cv2.VideoWriter_fourcc(*'MPEG'),
+#         fps=fps, frameSize=(width, height))
+#     video_writer.write(img)
+#
+#     if t % reset_every == 0:
+#       pass
+#
+#   # import json
+#   # with open("meta_info.json", 'w') as f:
+#   #   json.dump(np.hstack((arr, arr_r, states)).tolist(),f, indent=4)
+#
+#   if video_writer is not None:
+#     os.makedirs(os.path.dirname(video_filename), exist_ok=True)
+#     video_writer.release()
+#     tf.logging.info("Video written to %s" % video_filename)
