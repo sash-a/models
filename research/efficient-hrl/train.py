@@ -509,6 +509,7 @@ def train_uvf(train_dir,
           mode='train', batch_size=batch_size,
           state=states, next_state=next_states,
       )
+
       if not relabel:  # Re-label context (in the style of TDM or HER).
         contexts, next_contexts = (
             batch_dequeue[-2*len(contexts):-1*len(contexts)],
@@ -609,8 +610,10 @@ def train_uvf(train_dir,
   ] + list(uvf_agent.context_vars) + list(meta_agent.context_vars) + state_preprocess.get_trainable_vars()
   # add critic vars, since some test evaluation depends on them
   policy_vars += uvf_agent.get_trainable_critic_vars() + meta_agent.get_trainable_critic_vars()
+  # policy_saver = tf.train.Saver(
+  #     policy_vars, max_to_keep=max_policies_to_save, sharded=False)
   policy_saver = tf.train.Saver(
-      policy_vars, max_to_keep=max_policies_to_save, sharded=False)
+      policy_vars, max_to_keep=1000, keep_checkpoint_every_n_hours=0.25, sharded=False)
 
   lowlevel_vars = (uvf_agent.get_actor_vars() +
                    uvf_agent.get_trainable_critic_vars() +

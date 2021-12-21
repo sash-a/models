@@ -1,7 +1,7 @@
 #-*-Python-*-
 create_maze_env.env_name = "AntGather"
 context_range = (%CONTEXT_RANGE_MIN, %CONTEXT_RANGE_MAX)
-meta_context_range = ((-6, -6), (6, 6))
+meta_context_range = ((0, 0), (0, 0))
 
 RESET_EPISODE_PERIOD = 500
 RESET_ENV_PERIOD = 1
@@ -49,9 +49,6 @@ meta/Context.reward_fn = @task/plain_rewards
 
 ## Config rewards
 task/negative_distance.state_indices = [0, 1]
-task/negative_distance.relative_context = False
-task/negative_distance.diff = False
-task/negative_distance.offset = 0.0
 
 ## Config samplers
 train/RandomSampler.context_range = %meta_context_range
@@ -61,6 +58,6 @@ relative_context_transition_fn.k = %SUBGOAL_DIM
 relative_context_multi_transition_fn.k = %SUBGOAL_DIM
 MetaAgent.k = %SUBGOAL_DIM
 
-eval1/ConstantSampler.value = [1, 1]
-eval2/ConstantSampler.value = [2, 2]
-eval3/ConstantSampler.value = [-1, -1]
+eval1/ConstantSampler.value = [4, 4]
+eval2/ConstantSampler.value = [-4, 4]
+eval3/ConstantSampler.value = [-4, -4]

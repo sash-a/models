@@ -27,7 +27,7 @@ from tf_agents.environments import tf_py_environment
 @gin.configurable
 def create_maze_env(env_name=None, top_down_view=False):
   if env_name == 'AntGather':
-    e = AntGatherEnv(n_bins=8, sensor_span=2 * math.pi)
+    e = AntGatherEnv(sensor_span=2 * math.pi, activity_range=10)
     e.reset()
     wrapped_env = gym_wrapper.GymWrapper(e)
     return wrapped_env
@@ -79,7 +79,8 @@ def create_maze_env(env_name=None, top_down_view=False):
       'maze_size_scaling': maze_size_scaling
   }
   gym_env = cls(**gym_mujoco_kwargs)
-  gym_env.reset()
+  s = gym_env.reset()
+  print(f'!!!!!!!!!!!!!here is the first state (size:{s.size}):\n{s}')
   wrapped_env = gym_wrapper.GymWrapper(gym_env)
   return wrapped_env
 
