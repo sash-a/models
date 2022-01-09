@@ -86,9 +86,10 @@ class EnvWithGoal(object):
 
 
 def run_environment(env_name, episode_length, num_episodes):
-  env = EnvWithGoal(
-      create_maze_env.create_maze_env(env_name).gym,
-      env_name)
+  # env = EnvWithGoal(
+  #     create_maze_env.create_maze_env(env_name).gym,
+  #     env_name)
+  env = create_maze_env.create_maze_env(env_name).gym
 
   def action_fn(obs):
     action_space = env.action_space
